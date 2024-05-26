@@ -63,9 +63,9 @@ function Comments({ comment, userLoggedId }) {
   return (
     <li className="">
       <div
-        className={` bg-white rounded-lg p-5 pb-12 grid ${!isEditing ? "grid-rows-mobile" : "grid-rows-mobileEdit"} grid-cols-mobile gap-y-2 desktop:grid-cols-desktop desktop:pb-4`}
+        className={` bg-white rounded-lg p-5 pb-12 grid ${!isEditing ? "grid-rows-mobile" : "grid-rows-mobileEdit"} grid-cols-mobile gap-y-2 desktop:grid-cols-desktop`}
       >
-        <div className="flex items-center gap-4 desktop:col-start-3 desktop:self-start">
+        <div className="flex items-center gap-4 desktop:col-start-1 desktop:col-span-2 desktop:self-start">
           {user && (
             <>
               <img

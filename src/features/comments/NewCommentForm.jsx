@@ -33,18 +33,9 @@ function NewCommentForm({ userLogged }) {
             className=" w-full h-[100px] p-4 border-[1px] border-neutral-lightgray rounded-lg text-neutral-darkblue focus:outline-primary-moderateblue focus:outline-none focus:shadow-sm focus:border-none"
             type="text"
             placeholder="Add a comment..."
-            {...register("comment", { required: true, minLength: 6 })}
+            {...register("comment", { required: true })}
           ></textarea>
         </label>
-        {errors.comment && errors.comment.type === "required" && (
-          <p className="">
-            Comment is required{" "}
-            <img className="" src="/icons/icon-cross.svg"></img>
-          </p>
-        )}
-        {errors.comment && errors.comment.type === "minLength" && (
-          <p className="">A comment should have at-least 6 characters.</p>
-        )}
 
         <div className="flex justify-between items-center">
           <img

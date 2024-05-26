@@ -35,7 +35,7 @@ function ReplyForm({ commentId, onCancel }) {
         />
         <textarea
           placeholder="Add a reply..."
-          className="w-full border-primary-moderateblue border-[1px] rounded-lg p-4 h-[100px]"
+          className="w-full h-[100px] p-4 border-[1px] border-neutral-lightgray rounded-lg text-neutral-darkblue focus:outline-primary-moderateblue focus:outline-none focus:shadow-sm focus:border-none"
           disabled={isLoading}
           {...register("text", { required: true })}
         />

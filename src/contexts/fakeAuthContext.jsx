@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import PropTypes from "prop-types";
 import { useUser } from "../features/users/useUser";
+import Spinner from "../ui/Spinner";
 
 const AuthContext = createContext();
 
@@ -9,7 +10,12 @@ function AuthProvider({ children }) {
   const { user, isLoading, error } = useUser(4);
   const isAuthenticated = !!user;
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   if (error) return <div>Error: {error.message}</div>;
 
   return (

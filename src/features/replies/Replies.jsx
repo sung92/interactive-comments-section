@@ -8,6 +8,7 @@ import EditReply from "./EditReply";
 import PropTypes from "prop-types";
 import calculateTime from "../utils/calculateTime";
 import ReplyForm from "./ReplyForm"; // Import the ReplyForm component
+import Spinner from "../../ui/Spinner";
 
 function Replies({ reply, userLoggedId }) {
   const { isLoading: isLoadingDelete, deleteReply } = useDeleteReply();
@@ -46,7 +47,12 @@ function Replies({ reply, userLoggedId }) {
     setIsReplying(false);
   };
 
-  if (isLoading || isLoadingVoteStatus) return <div>Loading...</div>;
+  if (isLoading || isLoadingVoteStatus)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   if (error) return <div>Error loading user</div>;
 
   return (

@@ -9,6 +9,7 @@ import { useVoteStatus } from "../votes/useVoteStatus";
 import EditComment from "./EditComment";
 import { useState } from "react";
 import ReplyForm from "../replies/ReplyForm";
+import Spinner from "../../ui/Spinner";
 
 function Comments({ comment, userLoggedId }) {
   const { isLoading: isLoadingDelete, deleteComment } = useDeleteComments();
@@ -49,7 +50,12 @@ function Comments({ comment, userLoggedId }) {
     setIsReplying(false);
   };
 
-  if (isLoading || isLoadingVoteStatus) return <div>Loading...</div>;
+  if (isLoading || isLoadingVoteStatus)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   if (error) return <div>Error loading user</div>;
 
   console.log(comment.id);

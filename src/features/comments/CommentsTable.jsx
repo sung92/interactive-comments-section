@@ -3,6 +3,7 @@ import { useComments } from "./useComments";
 import Comments from "./Comments";
 import { useAuth } from "../../contexts/fakeAuthContext";
 import NewCommentForm from "./NewCommentForm";
+import Spinner from "../../ui/Spinner";
 
 function CommentsTable() {
   // 1) Llamamos a todos los comments ya ordenados por fecha
@@ -10,7 +11,12 @@ function CommentsTable() {
 
   const { userLogged } = useAuth(); // The logged user (juliusumo)
 
-  if (isLoading) return <p>Loading comments . . .</p>;
+  if (isLoading)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   console.log(comments);
 
   return (

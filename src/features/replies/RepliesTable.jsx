@@ -1,11 +1,17 @@
 import { useReply } from "./useReply";
 import Replies from "./Replies";
 import PropTypes from "prop-types";
+import Spinner from "../../ui/Spinner";
 
 function RepliesTable({ commentId, userLoggedId }) {
   const { isLoading, error, replies } = useReply(commentId);
 
-  if (isLoading) return <div>Loading replies...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   if (error) return <div>Error loading replies</div>;
 
   if (replies.length == 0) return;

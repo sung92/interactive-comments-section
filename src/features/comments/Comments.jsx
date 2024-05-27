@@ -17,6 +17,7 @@ function Comments({ comment, userLoggedId }) {
   const { isLoading, error, user } = useUser(comment.user);
   const [isEditing, setIsEditing] = useState(false);
   const [isReplying, setIsReplying] = useState(false); // State for managing reply form visibility
+  const [isDebouncing, setIsDebouncing] = useState(false);
 
   const upvote = useUpvote(comment.id, userLoggedId);
   const downvote = useDownvote(comment.id, userLoggedId);
@@ -29,11 +30,18 @@ function Comments({ comment, userLoggedId }) {
 
   const handleUpvote = debounce(() => {
     upvote.mutate();
+    setIsDebouncing(false);
   }, 300);
 
   const handleDownvote = debounce(() => {
     downvote.mutate();
+    setIsDebouncing(false);
   }, 300);
+
+  const startDebounce = (action) => {
+    setIsDebouncing(true);
+    action();
+  };
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -102,7 +110,10 @@ function Comments({ comment, userLoggedId }) {
 
         {!isEditing && (
           <div className=" bg-neutral-verylgray flex justify-around py-1 px-3 rounded-lg w-[100px] h-[50px] items-center row-start-5 self-center desktop:row-start-1 desktop:col-start-1 desktop:flex-col desktop:w-[50px] desktop:h-[100px] desktop:row-span-3 desktop:self-start">
-            <button onClick={handleUpvote}>
+            <button
+              disabled={isDebouncing}
+              onClick={() => startDebounce(handleUpvote)}
+            >
               <p
                 className={`font-bold text-[25px] ${voteStatus === 1 ? "text-tomato" : "text-primary-lightgrayishblue"}`}
               >
@@ -113,7 +124,10 @@ function Comments({ comment, userLoggedId }) {
             <p className=" text-primary-moderateblue font-bold text-[18px]">
               {comment.votes}
             </p>
-            <button onClick={handleDownvote}>
+            <button
+              disabled={isDebouncing}
+              onClick={() => startDebounce(handleDownvote)}
+            >
               <p
                 className={`font-bold text-[25px] ${voteStatus === -1 ? "text-primary-moderateblue" : "text-primary-lightgrayishblue"}`}
               >

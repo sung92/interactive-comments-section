@@ -16,6 +16,7 @@ function Replies({ reply, userLoggedId }) {
   const { isLoading, error, user } = useUser(reply.user);
   const [isEditing, setIsEditing] = useState(false);
   const [isReplying, setIsReplying] = useState(false); // State for managing reply form visibility
+  const [isDebouncing, setIsDebouncing] = useState(false);
 
   const upvote = useUpvoteReply(reply.id, userLoggedId);
   const downvote = useDownvoteReply(reply.id, userLoggedId);
@@ -26,11 +27,18 @@ function Replies({ reply, userLoggedId }) {
 
   const handleUpvote = debounce(() => {
     upvote.mutate();
+    setIsDebouncing(false);
   }, 300);
 
   const handleDownvote = debounce(() => {
     downvote.mutate();
+    setIsDebouncing(false);
   }, 300);
+
+  const startDebounce = (action) => {
+    setIsDebouncing(true);
+    action();
+  };
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -97,7 +105,10 @@ function Replies({ reply, userLoggedId }) {
 
         {!isEditing && (
           <div className=" bg-neutral-verylgray flex justify-around py-1 px-3 rounded-lg w-[100px] h-[50px] items-center row-start-5 self-center desktop:row-start-1 desktop:col-start-1 desktop:flex-col desktop:w-[50px] desktop:h-[100px] desktop:row-span-3 desktop:self-start">
-            <button onClick={handleUpvote}>
+            <button
+              disabled={isDebouncing}
+              onClick={() => startDebounce(handleUpvote)}
+            >
               <p
                 className={`font-bold text-[25px] ${voteStatus?.vote === 1 ? "text-tomato" : "text-primary-lightgrayishblue"}`}
               >
@@ -108,7 +119,10 @@ function Replies({ reply, userLoggedId }) {
             <p className=" text-primary-moderateblue font-bold text-[18px]">
               {reply.votes}
             </p>
-            <button onClick={handleDownvote}>
+            <button
+              disabled={isDebouncing}
+              onClick={() => startDebounce(handleDownvote)}
+            >
               <p
                 className={`font-bold text-[25px] ${voteStatus?.vote === -1 ? "text-primary-moderateblue" : "text-primary-lightgrayishblue"}`}
               >

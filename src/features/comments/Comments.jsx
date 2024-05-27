@@ -10,6 +10,7 @@ import EditComment from "./EditComment";
 import { useState } from "react";
 import ReplyForm from "../replies/ReplyForm";
 import Spinner from "../../ui/Spinner";
+import { debounce } from "../utils/debounce";
 
 function Comments({ comment, userLoggedId }) {
   const { isLoading: isLoadingDelete, deleteComment } = useDeleteComments();
@@ -26,13 +27,13 @@ function Comments({ comment, userLoggedId }) {
 
   const commentCreatedAt = calculateTime(comment.created_at);
 
-  const handleUpvote = () => {
+  const handleUpvote = debounce(() => {
     upvote.mutate();
-  };
+  }, 300);
 
-  const handleDownvote = () => {
+  const handleDownvote = debounce(() => {
     downvote.mutate();
-  };
+  }, 300);
 
   const handleEditClick = () => {
     setIsEditing(true);

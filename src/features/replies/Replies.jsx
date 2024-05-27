@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useUser } from "../users/useUser";
 import { useDeleteReply } from "./useDeleteReply";
 import { useUpvoteReply } from "../votes/useUpvoteReply";
@@ -16,7 +16,9 @@ function Replies({ reply, userLoggedId }) {
   const { isLoading, error, user } = useUser(reply.user);
   const [isEditing, setIsEditing] = useState(false);
   const [isReplying, setIsReplying] = useState(false); // State for managing reply form visibility
+
   const [isDebouncing, setIsDebouncing] = useState(false);
+  const voteInProgressRef = useRef(false);
 
   const upvote = useUpvoteReply(reply.id, userLoggedId);
   const downvote = useDownvoteReply(reply.id, userLoggedId);
@@ -28,16 +30,21 @@ function Replies({ reply, userLoggedId }) {
   const handleUpvote = debounce(() => {
     upvote.mutate();
     setIsDebouncing(false);
+    voteInProgressRef.current = false;
   }, 300);
 
   const handleDownvote = debounce(() => {
     downvote.mutate();
     setIsDebouncing(false);
+    voteInProgressRef.current = false;
   }, 300);
 
   const startDebounce = (action) => {
-    setIsDebouncing(true);
-    action();
+    if (!voteInProgressRef.current) {
+      voteInProgressRef.current = true;
+      setIsDebouncing(true);
+      action();
+    }
   };
 
   const handleEditClick = () => {

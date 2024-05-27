@@ -7,7 +7,7 @@ import { useUpvote } from "../votes/useUpvote";
 import { useDownvote } from "../votes/useDownvote";
 import { useVoteStatus } from "../votes/useVoteStatus";
 import EditComment from "./EditComment";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import ReplyForm from "../replies/ReplyForm";
 import Spinner from "../../ui/Spinner";
 import { debounce } from "../utils/debounce";
@@ -17,7 +17,9 @@ function Comments({ comment, userLoggedId }) {
   const { isLoading, error, user } = useUser(comment.user);
   const [isEditing, setIsEditing] = useState(false);
   const [isReplying, setIsReplying] = useState(false); // State for managing reply form visibility
+
   const [isDebouncing, setIsDebouncing] = useState(false);
+  const voteInProgressRef = useRef(false);
 
   const upvote = useUpvote(comment.id, userLoggedId);
   const downvote = useDownvote(comment.id, userLoggedId);
@@ -31,16 +33,21 @@ function Comments({ comment, userLoggedId }) {
   const handleUpvote = debounce(() => {
     upvote.mutate();
     setIsDebouncing(false);
+    voteInProgressRef.current = false;
   }, 300);
 
   const handleDownvote = debounce(() => {
     downvote.mutate();
     setIsDebouncing(false);
+    voteInProgressRef.current = false;
   }, 300);
 
   const startDebounce = (action) => {
-    setIsDebouncing(true);
-    action();
+    if (!voteInProgressRef.current) {
+      voteInProgressRef.current = true;
+      setIsDebouncing(true);
+      action();
+    }
   };
 
   const handleEditClick = () => {

@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import calculateTime from "../utils/calculateTime";
 import ReplyForm from "./ReplyForm"; // Import the ReplyForm component
 import Spinner from "../../ui/Spinner";
+import { debounce } from "../utils/debounce";
 
 function Replies({ reply, userLoggedId }) {
   const { isLoading: isLoadingDelete, deleteReply } = useDeleteReply();
@@ -23,13 +24,13 @@ function Replies({ reply, userLoggedId }) {
 
   const replyCreatedAt = calculateTime(reply.created_at);
 
-  const handleUpvote = () => {
+  const handleUpvote = debounce(() => {
     upvote.mutate();
-  };
+  }, 300);
 
-  const handleDownvote = () => {
+  const handleDownvote = debounce(() => {
     downvote.mutate();
-  };
+  }, 300);
 
   const handleEditClick = () => {
     setIsEditing(true);
